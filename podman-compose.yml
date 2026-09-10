@@ -7,8 +7,8 @@ services:
       POSTGRES_DB: devboard
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
-      - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro,z
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro,z
     networks:
       - backend-net
     healthcheck:
