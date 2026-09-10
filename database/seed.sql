@@ -1,5 +1,5 @@
 INSERT INTO users (id, username, email, password_hash)
-VALUES ('123e4567-e89b-12d3-a456-426614174000', 'demo_user', 'demo@example.com', '$2b$12$LJ3m4ys3GZfnMQXYCzMk8uYpCnVELMGJOsQskhByZOBqhDooSMELi');
+VALUES ('123e4567-e89b-12d3-a456-426614174000', 'demo_user', 'demo@example.com', '$2b$12$wqVtS/39VsOSZCl0alhMu.XD1hfrTDF75sn.XrmRWGLW93HNx.t5W');
 
 INSERT INTO boards (id, title, owner_id)
 VALUES 
