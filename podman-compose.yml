@@ -1,0 +1,57 @@
+services:
+  db:
+    image: docker.io/library/postgres:16-alpine
+    environment:
+      POSTGRES_USER: devboard
+      POSTGRES_PASSWORD: devboard_secret
+      POSTGRES_DB: devboard
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    networks:
+      - backend-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U devboard -d devboard"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Containerfile
+    ports:
+      - "3000:8000"
+    environment:
+      DATABASE_URL: postgresql://devboard:devboard_secret@db:5432/devboard
+      SECRET_KEY: change-me-in-production-use-openssl-rand-hex-32
+    networks:
+      - backend-net
+      - frontend-net
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Containerfile
+    ports:
+      - "8080:8080"
+    environment:
+      VITE_API_URL: http://localhost:3000
+    networks:
+      - frontend-net
+    depends_on:
+      - backend
+    restart: always
+
+networks:
+  backend-net:
+  frontend-net:
+
+volumes:
+  pgdata:
